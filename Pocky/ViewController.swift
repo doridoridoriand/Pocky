@@ -10,25 +10,18 @@ import Foundation
 import AppKit
 import Alamofire
 
+let deviceNameKey : NSString = "deviceName"
+
 class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate {
-    
-    let dataArray : NSMutableArray = []
-    
-    var selectedIndex : Int?
-    
+
     @IBOutlet weak var nameTextField: NSTextField!
     @IBOutlet weak var tableView: NSTableView!
     
+    let dataArray : NSMutableArray = []
+    var selectedIndex : Int?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        for i in 0...10 {
-            let data : NSDictionary = [
-                "title": NSString(format: "title-%d", i),
-                "description": NSString(format: "description-%d", i)
-            ]
-            dataArray.addObject(data)
-        }
         
         tableView.target = self
         tableView.action = "doClick:"
@@ -40,7 +33,14 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                 NSLog("response : %@", response!)
                 let jsonDic : NSDictionary = jsondata as! NSDictionary
                 println(jsonDic["version"])
-                
+                let deviceList : NSArray = jsonDic["devices"] as! NSArray
+                for device in deviceList {
+                    let data : NSDictionary = [
+                        deviceNameKey: device
+                    ]
+                    self.dataArray.addObject(data)
+                }
+                self.tableView.reloadData()
             }
         
     }
@@ -51,7 +51,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     
     func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
         let data : NSDictionary = dataArray.objectAtIndex(row) as! NSDictionary
-        return data.objectForKey("title")
+        return data.objectForKey(deviceNameKey)
     }
     
     func doClick(sender: AnyObject) {
