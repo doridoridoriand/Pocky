@@ -9,10 +9,13 @@
 import Foundation
 import AppKit
 
-class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate {
+class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate {
     
-    var dataArray : NSMutableArray = []
+    let dataArray : NSMutableArray = []
     
+    var selectedIndex : Int?
+    
+    @IBOutlet weak var nameTextField: NSTextField!
     @IBOutlet weak var tableView: NSTableView!
     
     override func viewDidLoad() {
@@ -41,8 +44,16 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     
     func doClick(sender: AnyObject) {
         NSLog("clickedRow : %d", tableView.clickedRow)
+        selectedIndex = tableView.clickedRow
     }
     
-    
-    
+    @IBAction func buttonAction(sender: AnyObject) {
+        if selectedIndex != nil {
+            NSLog("selected : %d  name : %@", selectedIndex!, nameTextField.stringValue)
+        } else {
+            NSLog("not selected")
+        }
+        
+    }
+
 }
