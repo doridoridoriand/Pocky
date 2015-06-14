@@ -3,11 +3,12 @@
 //  Pocky
 //
 //  Created by Hitoshi Saito on 2015/06/13.
-//  Copyright (c) 2015年 CyberZ. All rights reserved.
+//  Copyright (c) 2015年 Hitoshi Saito. All rights reserved.
 //
 
 import Foundation
 import AppKit
+import Alamofire
 
 class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate {
     
@@ -31,6 +32,17 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         
         tableView.target = self
         tableView.action = "doClick:"
+        
+        Alamofire
+            .request(.GET, CommonConst.requestURLDeviceList)
+            .responseJSON(options: NSJSONReadingOptions.AllowFragments) { (request, response, jsondata, error) -> Void in
+                NSLog("request : %@", request)
+                NSLog("response : %@", response!)
+                let jsonDic : NSDictionary = jsondata as! NSDictionary
+                println(jsonDic["version"])
+                
+            }
+        
     }
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
@@ -50,6 +62,16 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     @IBAction func buttonAction(sender: AnyObject) {
         if selectedIndex != nil {
             NSLog("selected : %d  name : %@", selectedIndex!, nameTextField.stringValue)
+            
+            Alamofire.request(
+                .POST
+                , CommonConst.requestURLSlackWebhook
+                , parameters: [
+                    "channel": "#rental"
+                    , "username": nameTextField.stringValue
+                    , "text": "testです。"
+                ]
+                , encoding: .JSON)
         } else {
             NSLog("not selected")
         }

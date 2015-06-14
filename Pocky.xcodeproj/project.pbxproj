@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C3B81C941B2D76FA00A4B986 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3B81C931B2D76FA00A4B986 /* Alamofire.framework */; };
+		C3B81C951B2D76FA00A4B986 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C3B81C931B2D76FA00A4B986 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C3B81C981B2D87A900A4B986 /* CommonConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B81C971B2D87A900A4B986 /* CommonConst.swift */; };
 		C3F4EBC81B29F50400CADC6C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3F4EBC71B29F50400CADC6C /* Images.xcassets */; };
 		C3F4EBCB1B29F50400CADC6C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3F4EBC91B29F50400CADC6C /* Main.storyboard */; };
-		C3F4EBE21B29F5D100CADC6C /* hoge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F4EBE11B29F5D100CADC6C /* hoge.swift */; };
-		C3F4EBE41B29F73400CADC6C /* AccountListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F4EBE31B29F73400CADC6C /* AccountListViewController.swift */; };
 		C3F4EBE61B2C29BB00CADC6C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F4EBE51B2C29BB00CADC6C /* ViewController.swift */; };
 		C3F4EBE81B2C2ED100CADC6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F4EBE71B2C2ED100CADC6C /* AppDelegate.swift */; };
 		C3F4EC1A1B2C31D900CADC6C /* PockyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F4EC191B2C31D900CADC6C /* PockyTests.swift */; };
@@ -26,7 +27,23 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		C3B81C961B2D76FA00A4B986 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C3B81C951B2D76FA00A4B986 /* Alamofire.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		C3B81C931B2D76FA00A4B986 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
+		C3B81C971B2D87A900A4B986 /* CommonConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonConst.swift; sourceTree = "<group>"; };
 		C3F4EBBA1B29F50400CADC6C /* Pocky.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pocky.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3F4EBBE1B29F50400CADC6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C3F4EBC71B29F50400CADC6C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -34,8 +51,6 @@
 		C3F4EBD01B29F50400CADC6C /* PockyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PockyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3F4EBD51B29F50400CADC6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C3F4EBE01B29F5D000CADC6C /* Pocky-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Pocky-Bridging-Header.h"; sourceTree = "<group>"; };
-		C3F4EBE11B29F5D100CADC6C /* hoge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = hoge.swift; sourceTree = "<group>"; };
-		C3F4EBE31B29F73400CADC6C /* AccountListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountListViewController.swift; sourceTree = "<group>"; };
 		C3F4EBE51B2C29BB00CADC6C /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		C3F4EBE71B2C2ED100CADC6C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3F4EC191B2C31D900CADC6C /* PockyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PockyTests.swift; sourceTree = "<group>"; };
@@ -46,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3B81C941B2D76FA00A4B986 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +78,7 @@
 		C3F4EBB11B29F50400CADC6C = {
 			isa = PBXGroup;
 			children = (
+				C3B81C931B2D76FA00A4B986 /* Alamofire.framework */,
 				C3F4EBBC1B29F50400CADC6C /* Pocky */,
 				C3F4EBD31B29F50400CADC6C /* PockyTests */,
 				C3F4EBBB1B29F50400CADC6C /* Products */,
@@ -83,10 +100,9 @@
 				C3F4EBC71B29F50400CADC6C /* Images.xcassets */,
 				C3F4EBC91B29F50400CADC6C /* Main.storyboard */,
 				C3F4EBBD1B29F50400CADC6C /* Supporting Files */,
-				C3F4EBE11B29F5D100CADC6C /* hoge.swift */,
-				C3F4EBE31B29F73400CADC6C /* AccountListViewController.swift */,
 				C3F4EBE51B2C29BB00CADC6C /* ViewController.swift */,
 				C3F4EBE71B2C2ED100CADC6C /* AppDelegate.swift */,
+				C3B81C971B2D87A900A4B986 /* CommonConst.swift */,
 				C3F4EBE01B29F5D000CADC6C /* Pocky-Bridging-Header.h */,
 			);
 			path = Pocky;
@@ -127,6 +143,7 @@
 				C3F4EBB61B29F50400CADC6C /* Sources */,
 				C3F4EBB71B29F50400CADC6C /* Frameworks */,
 				C3F4EBB81B29F50400CADC6C /* Resources */,
+				C3B81C961B2D76FA00A4B986 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -216,10 +233,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3B81C981B2D87A900A4B986 /* CommonConst.swift in Sources */,
 				C3F4EBE81B2C2ED100CADC6C /* AppDelegate.swift in Sources */,
 				C3F4EBE61B2C29BB00CADC6C /* ViewController.swift in Sources */,
-				C3F4EBE21B29F5D100CADC6C /* hoge.swift in Sources */,
-				C3F4EBE41B29F73400CADC6C /* AccountListViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,6 +354,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = Pocky/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -352,6 +372,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = Pocky/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -417,6 +441,7 @@
 				C3F4EBDC1B29F50400CADC6C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C3F4EBDD1B29F50400CADC6C /* Build configuration list for PBXNativeTarget "PockyTests" */ = {
 			isa = XCConfigurationList;
@@ -425,6 +450,7 @@
 				C3F4EBDF1B29F50400CADC6C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
