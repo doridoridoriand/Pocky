@@ -12,19 +12,23 @@ import Alamofire
 
 let deviceNameKey : NSString = "deviceName"
 
+let deviceListTableViewTag : Int = 0
+let selectedTableViewTag : Int = 10
+
 class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate {
 
     @IBOutlet weak var nameTextField: NSTextField!
-    @IBOutlet weak var tableView: NSTableView!
+    @IBOutlet weak var deviceListTableView: NSTableView!
+    @IBOutlet weak var selectedTableView: NSTableView!
     
     let dataArray : NSMutableArray = []
-    var selectedIndex : Int?
+    var selectedSet : NSMutableOrderedSet = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.target = self
-        tableView.action = "doClick:"
+        deviceListTableView.target = self
+        deviceListTableView.action = "doClick:"
         
         Alamofire
             .request(.GET, CommonConst.requestURLDeviceList)
@@ -40,28 +44,54 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                     ]
                     self.dataArray.addObject(data)
                 }
-                self.tableView.reloadData()
+                self.deviceListTableView.reloadData()
             }
         
     }
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        return dataArray.count
+        switch tableView.tag {
+            case deviceListTableViewTag:
+                return dataArray.count
+            case selectedTableViewTag:
+                return selectedSet.count
+            default:
+                return 0
+        }
     }
     
     func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
-        let data : NSDictionary = dataArray.objectAtIndex(row) as! NSDictionary
-        return data.objectForKey(deviceNameKey)
+        switch tableView.tag {
+            case deviceListTableViewTag:
+                let data : NSDictionary = dataArray.objectAtIndex(row) as! NSDictionary
+                return data.objectForKey(deviceNameKey)
+            case selectedTableViewTag:
+                let selectedIndex : Int = selectedSet[row] as! Int
+                let data : NSDictionary = dataArray.objectAtIndex(selectedIndex) as! NSDictionary
+                return data.objectForKey(deviceNameKey)
+            default:
+                return nil
+        }
     }
     
     func doClick(sender: AnyObject) {
-        NSLog("clickedRow : %d", tableView.clickedRow)
-        selectedIndex = tableView.clickedRow
+        NSLog("clickedRow : %d", deviceListTableView.clickedRow)
+        selectedSet.addObject(deviceListTableView.clickedRow)
+        
+        selectedTableView.reloadData()
     }
     
-    @IBAction func buttonAction(sender: AnyObject) {
-        if selectedIndex != nil {
-            NSLog("selected : %d  name : %@", selectedIndex!, nameTextField.stringValue)
+    @IBAction func bollowButtonAction(sender: AnyObject) {
+        if selectedSet.count > 0 {
+            
+            var textString : String = ""
+            for selectedIndex in selectedSet {
+                let data : NSDictionary = dataArray.objectAtIndex(selectedIndex as! Int) as! NSDictionary
+                let deviceName : String = data.objectForKey(deviceNameKey) as! String
+                textString += "[借用]" + deviceName + "\n"
+            }
+            
+            println(textString)
             
             Alamofire.request(
                 .POST
@@ -69,7 +99,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                 , parameters: [
                     "channel": "#rental"
                     , "username": nameTextField.stringValue
-                    , "text": "testです。"
+                    , "text": textString
                 ]
                 , encoding: .JSON)
         } else {
@@ -78,4 +108,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         
     }
 
+    @IBAction func returnButtonAction(sender: AnyObject) {
+        
+    }
 }

@@ -100,9 +100,9 @@
 				C3F4EBC71B29F50400CADC6C /* Images.xcassets */,
 				C3F4EBC91B29F50400CADC6C /* Main.storyboard */,
 				C3F4EBBD1B29F50400CADC6C /* Supporting Files */,
-				C3F4EBE51B2C29BB00CADC6C /* ViewController.swift */,
 				C3F4EBE71B2C2ED100CADC6C /* AppDelegate.swift */,
 				C3B81C971B2D87A900A4B986 /* CommonConst.swift */,
+				C3F4EBE51B2C29BB00CADC6C /* ViewController.swift */,
 				C3F4EBE01B29F5D000CADC6C /* Pocky-Bridging-Header.h */,
 			);
 			path = Pocky;
