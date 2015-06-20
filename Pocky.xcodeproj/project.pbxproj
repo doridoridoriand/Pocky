@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C3B0C3B61B3566820094E5A0 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B0C3B51B3566820094E5A0 /* Device.swift */; };
 		C3B81C941B2D76FA00A4B986 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3B81C931B2D76FA00A4B986 /* Alamofire.framework */; };
 		C3B81C951B2D76FA00A4B986 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C3B81C931B2D76FA00A4B986 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C3B81C981B2D87A900A4B986 /* CommonConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B81C971B2D87A900A4B986 /* CommonConst.swift */; };
@@ -42,6 +43,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C3B0C3B51B3566820094E5A0 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		C3B81C931B2D76FA00A4B986 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
 		C3B81C971B2D87A900A4B986 /* CommonConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonConst.swift; sourceTree = "<group>"; };
 		C3F4EBBA1B29F50400CADC6C /* Pocky.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pocky.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,6 +106,7 @@
 				C3B81C971B2D87A900A4B986 /* CommonConst.swift */,
 				C3F4EBE51B2C29BB00CADC6C /* ViewController.swift */,
 				C3F4EBE01B29F5D000CADC6C /* Pocky-Bridging-Header.h */,
+				C3B0C3B51B3566820094E5A0 /* Device.swift */,
 			);
 			path = Pocky;
 			sourceTree = "<group>";
@@ -179,7 +182,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0630;
-				ORGANIZATIONNAME = CyberZ;
+				ORGANIZATIONNAME = "Hitoshi Saito";
 				TargetAttributes = {
 					C3F4EBB91B29F50400CADC6C = {
 						CreatedOnToolsVersion = 6.3.2;
@@ -236,6 +239,7 @@
 				C3B81C981B2D87A900A4B986 /* CommonConst.swift in Sources */,
 				C3F4EBE81B2C2ED100CADC6C /* AppDelegate.swift in Sources */,
 				C3F4EBE61B2C29BB00CADC6C /* ViewController.swift in Sources */,
+				C3B0C3B61B3566820094E5A0 /* Device.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

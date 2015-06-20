@@ -10,8 +10,6 @@ import Foundation
 import AppKit
 import Alamofire
 
-let deviceNameKey : NSString = "deviceName"
-
 let deviceListTableViewTag : Int = 0
 let selectedTableViewTag : Int = 10
 
@@ -21,7 +19,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     @IBOutlet weak var deviceListTableView: NSTableView!
     @IBOutlet weak var selectedTableView: NSTableView!
     
-    let dataArray : NSMutableArray = []
+    var dataArray = [Device]()
     var selectedSet : NSMutableOrderedSet = []
     
     override func viewDidLoad() {
@@ -35,15 +33,15 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             .responseJSON(options: NSJSONReadingOptions.AllowFragments) { (request, response, jsondata, error) -> Void in
                 NSLog("request : %@", request)
                 NSLog("response : %@", response!)
-                let jsonDic : NSDictionary = jsondata as! NSDictionary
+                let jsonDic = jsondata as! NSDictionary
+                let deviceList = jsonDic["devices"] as! NSArray
                 println(jsonDic["version"])
-                let deviceList : NSArray = jsonDic["devices"] as! NSArray
-                for device in deviceList {
-                    let data : NSDictionary = [
-                        deviceNameKey: device
-                    ]
-                    self.dataArray.addObject(data)
+                
+                for deviceInfo in deviceList {
+                    let device = Device(type: deviceInfo["type"] as! String, label: deviceInfo["label"] as! String, carrier: deviceInfo["carrier"] as! String, model: deviceInfo["model"] as! String, modelNumber: deviceInfo["modelnum"] as! String, os: deviceInfo["os"] as! String)
+                    self.dataArray.append(device)
                 }
+
                 self.deviceListTableView.reloadData()
             }
         
@@ -63,19 +61,19 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
         switch tableView.tag {
             case deviceListTableViewTag:
-                let data : NSDictionary = dataArray.objectAtIndex(row) as! NSDictionary
-                return data.objectForKey(deviceNameKey)
+                let device : Device = dataArray[row]
+                return device.displayName
             case selectedTableViewTag:
                 let selectedIndex : Int = selectedSet[row] as! Int
-                let data : NSDictionary = dataArray.objectAtIndex(selectedIndex) as! NSDictionary
-                return data.objectForKey(deviceNameKey)
+                let device : Device = dataArray[selectedIndex]
+                return device.displayName
             default:
                 return nil
         }
     }
     
     func doClick(sender: AnyObject) {
-        NSLog("clickedRow : %d", deviceListTableView.clickedRow)
+        println(String(format: "clickedRow : %d", deviceListTableView.clickedRow))
         selectedSet.addObject(deviceListTableView.clickedRow)
         
         selectedTableView.reloadData()
@@ -86,9 +84,8 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             
             var textString : String = ""
             for selectedIndex in selectedSet {
-                let data : NSDictionary = dataArray.objectAtIndex(selectedIndex as! Int) as! NSDictionary
-                let deviceName : String = data.objectForKey(deviceNameKey) as! String
-                textString += "[借用]" + deviceName + "\n"
+                let device : Device = dataArray[selectedIndex as! Int]
+                textString += String(format: "[借用]%@\n", device.model)
             }
             
             println(textString)
@@ -103,7 +100,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                 ]
                 , encoding: .JSON)
         } else {
-            NSLog("not selected")
+            println("not selected")
         }
         
     }
