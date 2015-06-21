@@ -27,7 +27,8 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     @IBOutlet weak var selectedTitleLabel: NSTextFieldCell!
     @IBOutlet weak var deviceListSearchField: NSSearchField!
     
-    var dataArray = [Device]()
+    var dataDic = [String : Device]()
+    var displayArray = [String]()
     var selectedSet : NSMutableOrderedSet = []
     var borrowingSet : NSMutableOrderedSet = []
     var currentMode : Mode = Mode.Borrow
@@ -61,8 +62,13 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                 
                 for deviceInfo in deviceList {
                     let device = Device(id: deviceInfo["id"] as! String, sort: deviceInfo["sort"] as! String, type: deviceInfo["type"] as! String, label: deviceInfo["label"] as! String, carrier: deviceInfo["carrier"] as! String, model: deviceInfo["model"] as! String, modelNumber: deviceInfo["modelnum"] as! String, os: deviceInfo["os"] as! String)
-                    self.dataArray.append(device)
+                    self.dataDic[device.id] = device
                 }
+                
+                for deviceId in self.dataDic.keys {
+                    self.displayArray.append(deviceId)
+                }
+                self.sortArray(&self.displayArray)
                 
                 let ud = NSUserDefaults.standardUserDefaults()
                 var borrowList : Array! = ud.arrayForKey("borrow")
@@ -74,6 +80,15 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                 self.borrowingTableView.reloadData()
             }
         
+    }
+    
+    func sortArray(inout array: [String]) {
+        sort(&array) {
+            (str1 : String, str2 : String) -> Bool in
+            let device1 = self.dataDic[str1]
+            let device2 = self.dataDic[str2]
+            return device1!.sort < device2!.sort
+        }
     }
     
     func requestSlack(textString: String) {
@@ -93,9 +108,9 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     
     func saveBorrowingSet() {
         let ud = NSUserDefaults.standardUserDefaults()
-        var array : [Int] = []
-        for device in borrowingSet {
-            array.append(device as! Int)
+        var array : [String] = []
+        for deviceId in borrowingSet {
+            array.append(deviceId as! String)
         }
         
         ud.setObject(array, forKey: "borrow")
@@ -114,7 +129,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
         switch tableView.tag {
         case deviceListTableViewTag:
-            return dataArray.count
+            return displayArray.count
         case selectedTableViewTag:
             return selectedSet.count
         case borrowingTableViewTag:
@@ -127,16 +142,17 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
         switch tableView.tag {
         case deviceListTableViewTag:
-            let device : Device = dataArray[row]
-            return device.displayName
+            let deviceId = displayArray[row] as String
+            let device = dataDic[deviceId]
+            return device!.displayName
         case selectedTableViewTag:
-            let selectedIndex = selectedSet[row] as! Int
-            let device : Device = dataArray[selectedIndex]
-            return device.displayName
+            let deviceId = selectedSet[row] as! String
+            let device = dataDic[deviceId]
+            return device!.displayName
         case borrowingTableViewTag:
-            let selectedIndex = borrowingSet[row] as! Int
-            let device : Device = dataArray[selectedIndex]
-            return device.displayName
+            let deviceId = borrowingSet[row] as! String
+            let device = dataDic[deviceId]
+            return device!.displayName
         default:
             return nil
         }
@@ -151,7 +167,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         selectedTitleLabel.title = "借用候補"
         
         println(String(format: "clickedRow : %d", deviceListTableView.clickedRow))
-        selectedSet.addObject(deviceListTableView.clickedRow)
+        selectedSet.addObject(displayArray[deviceListTableView.clickedRow])
         
         selectedTableView.reloadData()
     }
@@ -199,17 +215,17 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         if currentMode == Mode.Borrow && selectedSet.count > 0 {
             
             var textString : String = ""
-            for selectedIndex in selectedSet {
-                let device : Device = dataArray[selectedIndex as! Int]
-                textString += String(format: "[借用]%@\n", device.displayName)
+            for selectedDeviceId in selectedSet {
+                let device = dataDic[selectedDeviceId as! String]
+                textString += String(format: "[借用]%@\n", device!.displayName)
             }
             
             println(textString)
             
             requestSlack(textString)
             
-            for device in selectedSet {
-                borrowingSet.addObject(device)
+            for deviceId in selectedSet {
+                borrowingSet.addObject(deviceId)
             }
             selectedSet.removeAllObjects()
             
@@ -226,9 +242,9 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     @IBAction func returnButtonAction(sender: AnyObject) {
         if currentMode == Mode.Return && selectedSet.count > 0 {
             var textString : String = ""
-            for index in selectedSet {
-                let device : Device = dataArray[index as! Int]
-                textString += String(format: "[返却]%@\n", device.displayName)
+            for selectedDeviceId in selectedSet {
+                let device = dataDic[selectedDeviceId as! String]
+                textString += String(format: "[返却]%@\n", device!.displayName)
             }
             
             println(textString)
@@ -238,7 +254,6 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             for device in selectedSet {
                 borrowingSet.removeObject(device)
             }
-            
             selectedSet.removeAllObjects()
             
             saveBorrowingSet()
@@ -251,9 +266,9 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     @IBAction func allReturnButtonAction(sender: AnyObject) {
         if borrowingSet.count > 0 {
             var textString : String = ""
-            for index in borrowingSet {
-                let device : Device = dataArray[index as! Int]
-                textString += String(format: "[返却]%@\n", device.displayName)
+            for borrowingDeviceId in borrowingSet {
+                let device = dataDic[borrowingDeviceId as! String]
+                textString += String(format: "[返却]%@\n", device!.displayName)
             }
             
             println(textString)
