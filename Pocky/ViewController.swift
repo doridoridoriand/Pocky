@@ -158,6 +158,20 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         }
     }
     
+//    func control(control: NSControl, textShouldBeginEditing fieldEditor: NSText) -> Bool {
+//        println(fieldEditor.string)
+//        return true
+//    }
+//    
+//    func control(control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
+//        println(fieldEditor.string)
+//        return true
+//    }
+    
+//    func control(control: NSControl, isValidObject obj: AnyObject) -> Bool {
+//        
+//    }
+    
     func deviceListTableViewClicked(sender: AnyObject) {
         if currentMode != Mode.Borrow {
             currentMode = Mode.Borrow
