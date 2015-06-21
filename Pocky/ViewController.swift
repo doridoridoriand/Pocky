@@ -44,6 +44,12 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         selectedTableView.headerView = nil
         borrowingTableView.headerView = nil
         
+        let ud = NSUserDefaults.standardUserDefaults()
+        let name = ud.stringForKey("name")
+        if let unwrappedName = name {
+            nameTextField.stringValue = unwrappedName
+        }
+        
         Alamofire
             .request(.GET, CommonConst.requestURLDeviceList)
             .responseJSON(options: NSJSONReadingOptions.AllowFragments) { (request, response, jsondata, error) -> Void in
@@ -54,7 +60,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                 println(jsonDic["version"])
                 
                 for deviceInfo in deviceList {
-                    let device = Device(type: deviceInfo["type"] as! String, label: deviceInfo["label"] as! String, carrier: deviceInfo["carrier"] as! String, model: deviceInfo["model"] as! String, modelNumber: deviceInfo["modelnum"] as! String, os: deviceInfo["os"] as! String)
+                    let device = Device(id: deviceInfo["id"] as! String, sort: deviceInfo["sort"] as! String, type: deviceInfo["type"] as! String, label: deviceInfo["label"] as! String, carrier: deviceInfo["carrier"] as! String, model: deviceInfo["model"] as! String, modelNumber: deviceInfo["modelnum"] as! String, os: deviceInfo["os"] as! String)
                     self.dataArray.append(device)
                 }
                 
@@ -80,6 +86,9 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
 //                , "text": textString
 //            ]
 //            , encoding: .JSON)
+        
+        saveName()
+
     }
     
     func saveBorrowingSet() {
@@ -90,6 +99,15 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         }
         
         ud.setObject(array, forKey: "borrow")
+        ud.synchronize()
+    }
+    
+    func saveName() {
+        if !(count(nameTextField.stringValue) > 0) {
+            return
+        }
+        let ud = NSUserDefaults.standardUserDefaults()
+        ud.setObject(nameTextField.stringValue, forKey: "name")
         ud.synchronize()
     }
     

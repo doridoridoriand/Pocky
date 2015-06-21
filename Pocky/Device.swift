@@ -7,6 +7,8 @@
 //
 
 struct Device {
+    var id: String
+    var sort: Int
     var type: String
     var label: String
     var carrier: String
@@ -19,12 +21,14 @@ struct Device {
         }
     }
     
-    init(type: String, label: String, carrier: String, model: String, modelNumber: String, os: String) {
-        self.type = type;
-        self.label = label;
-        self.carrier = carrier;
-        self.model = model;
-        self.modelNumber = modelNumber;
-        self.os = os;
+    init(id: String, sort: String, type: String, label: String, carrier: String, model: String, modelNumber: String, os: String) {
+        self.id = id
+        self.sort = sort.toInt()!
+        self.type = type
+        self.label = label
+        self.carrier = carrier
+        self.model = model
+        self.modelNumber = modelNumber
+        self.os = os
     }
 }
