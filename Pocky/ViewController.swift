@@ -37,7 +37,12 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         
 //        deviceListTableView.target = self
         deviceListTableView.action = "deviceListTableViewClicked:"
+        selectedTableView.action = "selectedTableViewClicked:"
         borrowingTableView.action = "borrowingTableViewClicked:"
+        
+        deviceListTableView.headerView = nil
+        selectedTableView.headerView = nil
+        borrowingTableView.headerView = nil
         
         Alamofire
             .request(.GET, CommonConst.requestURLDeviceList)
@@ -133,8 +138,30 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         selectedTableView.reloadData()
     }
     
+    func selectedTableViewClicked(sender: AnyObject) {
+        if !(selectedSet.count > 0) {
+            return
+        }
+        
+        let clickedRow = selectedTableView.clickedRow
+        println(String(format: "clickedRow : %d", clickedRow))
+        if clickedRow < 0 || clickedRow > selectedSet.count - 1 {
+            return
+        }
+        
+        selectedSet.removeObjectAtIndex(clickedRow)
+        
+        selectedTableView.reloadData()
+    }
+    
     func borrowingTableViewClicked(sender: AnyObject) {
         if !(borrowingSet.count > 0) {
+            return
+        }
+
+        let clickedRow = borrowingTableView.clickedRow
+        println(String(format: "clickedRow : %d", clickedRow))
+        if clickedRow < 0 || clickedRow > borrowingSet.count - 1 {
             return
         }
         
@@ -145,8 +172,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         
         selectedTitleLabel.title = "返却候補"
         
-        println(String(format: "clickedRow : %d", borrowingTableView.clickedRow))
-        selectedSet.addObject(borrowingSet[borrowingTableView.clickedRow])
+        selectedSet.addObject(borrowingSet[clickedRow])
         
         selectedTableView.reloadData()
     }
