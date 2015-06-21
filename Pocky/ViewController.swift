@@ -41,8 +41,8 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         Alamofire
             .request(.GET, CommonConst.requestURLDeviceList)
             .responseJSON(options: NSJSONReadingOptions.AllowFragments) { (request, response, jsondata, error) -> Void in
-                println(String(format: "request : %@", request))
-                println(String(format: "response : %@", response!))
+//                println(String(format: "request : %@", request))
+//                println(String(format: "response : %@", response!))
                 let jsonDic = jsondata as! NSDictionary
                 let deviceList = jsonDic["devices"] as! NSArray
                 println(jsonDic["version"])
@@ -51,8 +51,15 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                     let device = Device(type: deviceInfo["type"] as! String, label: deviceInfo["label"] as! String, carrier: deviceInfo["carrier"] as! String, model: deviceInfo["model"] as! String, modelNumber: deviceInfo["modelnum"] as! String, os: deviceInfo["os"] as! String)
                     self.dataArray.append(device)
                 }
+                
+                let ud = NSUserDefaults.standardUserDefaults()
+                var borrowList : Array! = ud.arrayForKey("borrow")
+                for device in borrowList {
+                    self.borrowingSet.addObject(device)
+                }
 
                 self.deviceListTableView.reloadData()
+                self.borrowingTableView.reloadData()
             }
         
     }
@@ -67,6 +74,17 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                 , "text": textString
             ]
             , encoding: .JSON)
+    }
+    
+    func saveBorrowingSet() {
+        let ud = NSUserDefaults.standardUserDefaults()
+        var array : [Int] = []
+        for device in borrowingSet {
+            array.append(device as! Int)
+        }
+        
+        ud.setObject(array, forKey: "borrow")
+        ud.synchronize()
     }
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
@@ -150,6 +168,8 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             }
             selectedSet.removeAllObjects()
             
+            saveBorrowingSet()
+
             selectedTableView.reloadData()
             borrowingTableView.reloadData()
         } else {
@@ -157,7 +177,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         }
         
     }
-
+    
     @IBAction func returnButtonAction(sender: AnyObject) {
         if selectedSet.count > 0 {
             var textString : String = ""
@@ -173,9 +193,12 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             for device in selectedSet {
                 borrowingSet.removeObject(device)
             }
-            borrowingTableView.reloadData()
             
             selectedSet.removeAllObjects()
+            
+            saveBorrowingSet()
+
+            borrowingTableView.reloadData()
             selectedTableView.reloadData()
         }
     }
@@ -193,6 +216,9 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             requestSlack(textString)
             
             borrowingSet.removeAllObjects()
+            
+            saveBorrowingSet()
+            
             borrowingTableView.reloadData()
         }
     }
