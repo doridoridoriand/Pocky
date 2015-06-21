@@ -17,7 +17,7 @@ let borrowingTableViewTag : Int = 20
 class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate {
 
     enum Mode {
-        case Rental, Borrow
+        case Borrow, Return
     }
 
     @IBOutlet weak var nameTextField: NSTextField!
@@ -25,11 +25,12 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     @IBOutlet weak var selectedTableView: NSTableView!
     @IBOutlet weak var borrowingTableView: NSTableView!
     @IBOutlet weak var selectedTitleLabel: NSTextFieldCell!
+    @IBOutlet weak var deviceListSearchField: NSSearchField!
     
     var dataArray = [Device]()
     var selectedSet : NSMutableOrderedSet = []
     var borrowingSet : NSMutableOrderedSet = []
-    var currentMode : Mode = Mode.Rental
+    var currentMode : Mode = Mode.Borrow
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,15 +66,15 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     }
     
     func requestSlack(textString: String) {
-        Alamofire.request(
-            .POST
-            , CommonConst.requestURLSlackWebhook
-            , parameters: [
-                "channel": "#rental"
-                , "username": nameTextField.stringValue
-                , "text": textString
-            ]
-            , encoding: .JSON)
+//        Alamofire.request(
+//            .POST
+//            , CommonConst.requestURLSlackWebhook
+//            , parameters: [
+//                "channel": "#rental"
+//                , "username": nameTextField.stringValue
+//                , "text": textString
+//            ]
+//            , encoding: .JSON)
     }
     
     func saveBorrowingSet() {
@@ -119,8 +120,8 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     }
     
     func deviceListTableViewClicked(sender: AnyObject) {
-        if currentMode != Mode.Rental {
-            currentMode = Mode.Rental
+        if currentMode != Mode.Borrow {
+            currentMode = Mode.Borrow
             selectedSet.removeAllObjects()
         }
         
@@ -137,8 +138,8 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             return
         }
         
-        if currentMode != Mode.Borrow {
-            currentMode = Mode.Borrow
+        if currentMode != Mode.Return {
+            currentMode = Mode.Return
             selectedSet.removeAllObjects()
         }
         
@@ -151,7 +152,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     }
     
     @IBAction func bollowButtonAction(sender: AnyObject) {
-        if selectedSet.count > 0 {
+        if currentMode == Mode.Borrow && selectedSet.count > 0 {
             
             var textString : String = ""
             for selectedIndex in selectedSet {
@@ -179,7 +180,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     }
     
     @IBAction func returnButtonAction(sender: AnyObject) {
-        if selectedSet.count > 0 {
+        if currentMode == Mode.Return && selectedSet.count > 0 {
             var textString : String = ""
             for index in selectedSet {
                 let device : Device = dataArray[index as! Int]
