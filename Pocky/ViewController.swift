@@ -72,8 +72,10 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                 
                 let ud = NSUserDefaults.standardUserDefaults()
                 var borrowList : Array! = ud.arrayForKey("borrow")
-                for device in borrowList {
-                    self.borrowingSet.addObject(device)
+                if let unwrappedBorrowList = borrowList {
+                    for device in unwrappedBorrowList {
+                        self.borrowingSet.addObject(device)
+                    }
                 }
 
                 self.deviceListTableView.reloadData()
@@ -92,15 +94,15 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     }
     
     func requestSlack(textString: String) {
-//        Alamofire.request(
-//            .POST
-//            , CommonConst.requestURLSlackWebhook
-//            , parameters: [
-//                "channel": "#rental"
-//                , "username": nameTextField.stringValue
-//                , "text": textString
-//            ]
-//            , encoding: .JSON)
+        Alamofire.request(
+            .POST
+            , CommonConst.requestURLSlackWebhook
+            , parameters: [
+                "channel": "#rental"
+                , "username": nameTextField.stringValue
+                , "text": textString
+            ]
+            , encoding: .JSON)
         
         saveName()
 
