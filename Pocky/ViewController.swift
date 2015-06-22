@@ -36,7 +36,6 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        deviceListTableView.target = self
         deviceListTableView.action = "deviceListTableViewClicked:"
         selectedTableView.action = "selectedTableViewClicked:"
         borrowingTableView.action = "borrowingTableViewClicked:"
@@ -44,6 +43,28 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         deviceListTableView.headerView = nil
         selectedTableView.headerView = nil
         borrowingTableView.headerView = nil
+        
+        // 検索機能
+        NSNotificationCenter.defaultCenter().addObserverForName(NSControlTextDidChangeNotification, object: deviceListSearchField, queue:NSOperationQueue.mainQueue()) { (notification: NSNotification!) -> Void in
+            
+            let inputString = self.deviceListSearchField.stringValue
+            
+            self.displayArray.removeAll()
+            if count(inputString) > 0 {
+                for device in self.dataDic.values {
+                    if let r = device.displayName.rangeOfString(inputString, options:.CaseInsensitiveSearch) {
+                        self.displayArray.append(device.id)
+                    }
+                }
+            } else {
+                for deviceId in self.dataDic.keys {
+                    self.displayArray.append(deviceId)
+                }
+            }
+            self.sortArray(&self.displayArray)
+            
+            self.deviceListTableView.reloadData()
+        }
         
         let ud = NSUserDefaults.standardUserDefaults()
         let name = ud.stringForKey("name")
@@ -173,6 +194,8 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
 //    func control(control: NSControl, isValidObject obj: AnyObject) -> Bool {
 //        
 //    }
+    
+    
     
     func deviceListTableViewClicked(sender: AnyObject) {
         if currentMode != Mode.Borrow {
