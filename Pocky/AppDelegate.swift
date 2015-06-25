@@ -18,4 +18,13 @@ class AppDelegate: NSObject, NSApplicationDelegate  {
     func applicationWillTerminate(notification: NSNotification) {
         
     }
+    
+    func applicationShouldHandleReopen(sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        if flag {
+            return false
+        } else {
+            sender.windows[0].orderFront(self);
+            return true
+        }
+    }
 }
