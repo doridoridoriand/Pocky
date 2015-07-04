@@ -11,6 +11,8 @@ import AppKit
 import Alamofire
 
 let deviceListTableViewTag : Int = 0
+let recentTableViewTag : Int = 1
+let favoriteTableViewTag : Int = 2
 let selectedTableViewTag : Int = 10
 let borrowingTableViewTag : Int = 20
 
@@ -24,11 +26,15 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     @IBOutlet weak var deviceListTableView: NSTableView!
     @IBOutlet weak var selectedTableView: NSTableView!
     @IBOutlet weak var borrowingTableView: NSTableView!
+    @IBOutlet weak var recentTableView: NSTableView!
+    @IBOutlet weak var favoriteTableView: NSTableView!
     @IBOutlet weak var selectedTitleLabel: NSTextFieldCell!
     @IBOutlet weak var deviceListSearchField: NSSearchField!
     
     var dataDic = [String : Device]()
     var displayArray = [String]()
+    var recentArray = [String]()
+    var favoriteArray = [String]()
     var selectedSet : NSMutableOrderedSet = []
     var borrowingSet : NSMutableOrderedSet = []
     var currentMode : Mode = Mode.Borrow
@@ -37,12 +43,10 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         super.viewDidLoad()
         
         deviceListTableView.action = "deviceListTableViewClicked:"
+        recentTableView.action = "deviceListTableViewClicked:"
+        favoriteTableView.action = "deviceListTableViewClicked:"
         selectedTableView.action = "selectedTableViewClicked:"
         borrowingTableView.action = "borrowingTableViewClicked:"
-        
-        deviceListTableView.headerView = nil
-        selectedTableView.headerView = nil
-        borrowingTableView.headerView = nil
         
         // 検索機能
         NSNotificationCenter.defaultCenter().addObserverForName(NSControlTextDidChangeNotification, object: deviceListSearchField, queue:NSOperationQueue.mainQueue()) { (notification: NSNotification!) -> Void in
@@ -94,12 +98,21 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                 let ud = NSUserDefaults.standardUserDefaults()
                 var borrowList : Array! = ud.arrayForKey("borrow")
                 if let unwrappedBorrowList = borrowList {
-                    for device in unwrappedBorrowList {
-                        self.borrowingSet.addObject(device)
+                    for deviceId in unwrappedBorrowList {
+                        self.borrowingSet.addObject(deviceId)
+                    }
+                }
+                
+                var recentList : Array! = ud.arrayForKey("recent")
+                if let unwrappedRecentList = recentList {
+                    for deviceId in unwrappedRecentList {
+                        self.recentArray.append(deviceId as! String)
                     }
                 }
 
                 self.deviceListTableView.reloadData()
+                self.recentTableView.reloadData()
+                self.favoriteTableView.reloadData()
                 self.borrowingTableView.reloadData()
             }
         
@@ -115,15 +128,15 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     }
     
     func requestSlack(textString: String) {
-        Alamofire.request(
-            .POST
-            , CommonConst.requestURLSlackWebhook
-            , parameters: [
-                "channel": "#rental"
-                , "username": nameTextField.stringValue
-                , "text": textString
-            ]
-            , encoding: .JSON)
+//        Alamofire.request(
+//            .POST
+//            , CommonConst.requestURLSlackWebhook
+//            , parameters: [
+//                "channel": "#rental"
+//                , "username": nameTextField.stringValue
+//                , "text": textString
+//            ]
+//            , encoding: .JSON)
         
         saveName()
 
@@ -131,12 +144,19 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     
     func saveBorrowingSet() {
         let ud = NSUserDefaults.standardUserDefaults()
-        var array : [String] = []
+        var borrowArray : [String] = []
         for deviceId in borrowingSet {
-            array.append(deviceId as! String)
+            borrowArray.append(deviceId as! String)
         }
+        ud.setObject(borrowArray, forKey: "borrow")
         
-        ud.setObject(array, forKey: "borrow")
+        ud.synchronize()
+    }
+    
+    func saveRecentSet() {
+        let ud = NSUserDefaults.standardUserDefaults()
+        ud.setObject(recentArray, forKey: "recent")
+        
         ud.synchronize()
     }
     
@@ -153,6 +173,10 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         switch tableView.tag {
         case deviceListTableViewTag:
             return displayArray.count
+        case recentTableViewTag:
+            return recentArray.count
+        case favoriteTableViewTag:
+            return favoriteArray.count
         case selectedTableViewTag:
             return selectedSet.count
         case borrowingTableViewTag:
@@ -168,6 +192,14 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             let deviceId = displayArray[row] as String
             let device = dataDic[deviceId]
             return device!.displayName
+        case recentTableViewTag:
+            let deviceId = recentArray[row] as String
+            let device = dataDic[deviceId]
+            return device!.displayName
+        case favoriteTableViewTag:
+            let deviceId = favoriteArray[row] as String
+            let device = dataDic[deviceId]
+            return device!.displayName
         case selectedTableViewTag:
             let deviceId = selectedSet[row] as! String
             let device = dataDic[deviceId]
@@ -181,23 +213,12 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         }
     }
     
-//    func control(control: NSControl, textShouldBeginEditing fieldEditor: NSText) -> Bool {
-//        println(fieldEditor.string)
-//        return true
-//    }
-//    
-//    func control(control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
-//        println(fieldEditor.string)
-//        return true
-//    }
     
-//    func control(control: NSControl, isValidObject obj: AnyObject) -> Bool {
-//        
-//    }
-    
-    
-    
-    func deviceListTableViewClicked(sender: AnyObject) {
+    func deviceListTableViewClicked(tableView: NSTableView) {
+        if !(tableView.clickedRow >= 0) {
+            return
+        }
+        
         if currentMode != Mode.Borrow {
             currentMode = Mode.Borrow
             selectedSet.removeAllObjects()
@@ -205,14 +226,24 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         
         selectedTitleLabel.title = "借用候補"
         
-        println(String(format: "clickedRow : %d", deviceListTableView.clickedRow))
-        selectedSet.addObject(displayArray[deviceListTableView.clickedRow])
+        println(String(format: "clickedRow : %d", tableView.clickedRow))
+        
+        switch tableView.tag {
+        case 0:
+            selectedSet.addObject(displayArray[tableView.clickedRow])
+        case 1:
+            selectedSet.addObject(recentArray[tableView.clickedRow])
+        case 2:
+            selectedSet.addObject(favoriteArray[tableView.clickedRow])
+        default:
+            break
+        }
         
         selectedTableView.reloadData()
     }
     
     func selectedTableViewClicked(sender: AnyObject) {
-        if !(selectedSet.count > 0) {
+        if !(selectedSet.count >= 0) {
             return
         }
         
@@ -266,10 +297,26 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             for deviceId in selectedSet {
                 borrowingSet.addObject(deviceId)
             }
-            selectedSet.removeAllObjects()
             
+            for deviceId in selectedSet {
+                // 配列内の同じdeviceIdを削除
+                recentArray = recentArray.filter({ (deviceIdInArray) -> Bool in
+                    return deviceIdInArray != deviceId as! String
+                })
+                
+                recentArray.insert(deviceId as! String, atIndex: 0)
+                
+                if recentArray.count > 10 {
+                    recentArray.removeLast()
+                }
+            }
+            
+            saveRecentSet()
             saveBorrowingSet()
+            
+            selectedSet.removeAllObjects()
 
+            recentTableView.reloadData()
             selectedTableView.reloadData()
             borrowingTableView.reloadData()
         } else {
@@ -293,9 +340,10 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             for device in selectedSet {
                 borrowingSet.removeObject(device)
             }
-            selectedSet.removeAllObjects()
             
             saveBorrowingSet()
+
+            selectedSet.removeAllObjects()
 
             borrowingTableView.reloadData()
             selectedTableView.reloadData()
