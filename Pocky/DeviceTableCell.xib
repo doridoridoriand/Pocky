@@ -11,16 +11,20 @@
             <rect key="frame" x="0.0" y="-2" width="227" height="25"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ke4-em-zMI">
-                    <rect key="frame" x="7" y="5" width="166" height="17"/>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ke4-em-zMI">
+                    <rect key="frame" x="8" y="4" width="181" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="x7N-U5-Eum">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ra8-nJ-p3M">
-                    <rect key="frame" x="179" y="3" width="20" height="20"/>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="Ra8-nJ-p3M">
+                    <rect key="frame" x="197" y="3" width="20" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="20" id="9QG-n0-DMm"/>
+                        <constraint firstAttribute="height" constant="20" id="EIF-py-IQc"/>
+                    </constraints>
                     <buttonCell key="cell" type="bevel" bezelStyle="circular" image="star-outline" imagePosition="overlaps" alignment="center" state="on" imageScaling="proportionallyDown" inset="2" id="Ol6-VW-GSY">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -30,6 +34,13 @@
                     </connections>
                 </button>
             </subviews>
+            <constraints>
+                <constraint firstAttribute="centerY" secondItem="ke4-em-zMI" secondAttribute="centerY" id="G3L-Y9-563"/>
+                <constraint firstAttribute="centerY" secondItem="Ra8-nJ-p3M" secondAttribute="centerY" id="NFW-uL-BXs"/>
+                <constraint firstItem="Ra8-nJ-p3M" firstAttribute="leading" secondItem="ke4-em-zMI" secondAttribute="trailing" constant="10" id="cLd-xZ-gNa"/>
+                <constraint firstAttribute="trailing" secondItem="Ra8-nJ-p3M" secondAttribute="trailing" constant="10" id="eul-tB-znQ"/>
+                <constraint firstItem="ke4-em-zMI" firstAttribute="leading" secondItem="6hE-HK-YJ2" secondAttribute="leading" constant="10" id="f9x-6K-tPb"/>
+            </constraints>
             <connections>
                 <outlet property="deviceLabel" destination="ke4-em-zMI" id="fxQ-27-cdE"/>
                 <outlet property="favoriteButton" destination="Ra8-nJ-p3M" id="pdo-y6-2gc"/>
