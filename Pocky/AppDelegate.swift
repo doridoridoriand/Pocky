@@ -23,7 +23,9 @@ class AppDelegate: NSObject, NSApplicationDelegate  {
         if flag {
             return false
         } else {
-            sender.windows[0].orderFront(self);
+            for window in sender.windows {
+                window.makeKeyAndOrderFront(self)
+            }
             return true
         }
     }
