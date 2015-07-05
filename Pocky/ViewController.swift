@@ -16,6 +16,8 @@ let favoriteTableViewTag : Int = 2
 let selectedTableViewTag : Int = 10
 let borrowingTableViewTag : Int = 20
 
+let recentMaxNumber : Int = 50
+
 let deviceCellIdentifier = "DeviceTableCell"
 
 class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate, DeviceTableCellDelegate {
@@ -375,7 +377,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                 
                 recentArray.insert(deviceId as! String, atIndex: 0)
                 
-                if recentArray.count > 10 {
+                if recentArray.count > recentMaxNumber {
                     recentArray.removeLast()
                 }
             }
