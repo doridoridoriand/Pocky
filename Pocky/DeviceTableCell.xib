@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <tableCellView id="6hE-HK-YJ2" customClass="DeviceTableCell" customModule="Pocky" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="-2" width="227" height="25"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ke4-em-zMI">
+                    <rect key="frame" x="7" y="5" width="166" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="x7N-U5-Eum">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ra8-nJ-p3M">
+                    <rect key="frame" x="179" y="3" width="20" height="20"/>
+                    <buttonCell key="cell" type="bevel" bezelStyle="circular" image="star-outline" imagePosition="overlaps" alignment="center" state="on" imageScaling="proportionallyDown" inset="2" id="Ol6-VW-GSY">
+                        <behavior key="behavior" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="favoriteButtonAction:" target="6hE-HK-YJ2" id="vzy-m3-aUY"/>
+                    </connections>
+                </button>
+            </subviews>
+            <connections>
+                <outlet property="deviceLabel" destination="ke4-em-zMI" id="fxQ-27-cdE"/>
+                <outlet property="favoriteButton" destination="Ra8-nJ-p3M" id="pdo-y6-2gc"/>
+            </connections>
+            <point key="canvasLocation" x="246.5" y="542.5"/>
+        </tableCellView>
+    </objects>
+    <resources>
+        <image name="star-outline" width="512" height="512"/>
+    </resources>
+</document>

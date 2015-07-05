@@ -16,7 +16,9 @@ let favoriteTableViewTag : Int = 2
 let selectedTableViewTag : Int = 10
 let borrowingTableViewTag : Int = 20
 
-class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate {
+let deviceCellIdentifier = "DeviceTableCell"
+
+class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate, DeviceTableCellDelegate {
 
     enum Mode {
         case Borrow, Return
@@ -47,6 +49,14 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         favoriteTableView.action = "deviceListTableViewClicked:"
         selectedTableView.action = "selectedTableViewClicked:"
         borrowingTableView.action = "borrowingTableViewClicked:"
+        
+        let nib = NSNib(nibNamed: "DeviceTableCell", bundle: NSBundle.mainBundle())!
+        
+        deviceListTableView.registerNib(nib, forIdentifier: deviceCellIdentifier)
+        recentTableView.registerNib(nib, forIdentifier: deviceCellIdentifier)
+        favoriteTableView.registerNib(nib, forIdentifier: deviceCellIdentifier)
+        selectedTableView.registerNib(nib, forIdentifier: deviceCellIdentifier)
+        borrowingTableView.registerNib(nib, forIdentifier: deviceCellIdentifier)
         
         // 検索機能
         NSNotificationCenter.defaultCenter().addObserverForName(NSControlTextDidChangeNotification, object: deviceListSearchField, queue:NSOperationQueue.mainQueue()) { (notification: NSNotification!) -> Void in
@@ -107,6 +117,13 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                 if let unwrappedRecentList = recentList {
                     for deviceId in unwrappedRecentList {
                         self.recentArray.append(deviceId as! String)
+                    }
+                }
+                
+                var favoriteList : Array! = ud.arrayForKey("favorite")
+                if let unwrappedFavoriteList = favoriteList {
+                    for deviceId in unwrappedFavoriteList {
+                        self.favoriteArray.append(deviceId as! String)
                     }
                 }
 
@@ -213,6 +230,37 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         }
     }
     
+    func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        var cellView: DeviceTableCell? = tableView.makeViewWithIdentifier(deviceCellIdentifier, owner: self) as! DeviceTableCell?
+        cellView?.delegate = self
+        
+        var deviceId: String = ""
+        switch tableView.tag {
+        case deviceListTableViewTag:
+            deviceId = displayArray[row] as String
+        case recentTableViewTag:
+            deviceId = recentArray[row] as String
+        case favoriteTableViewTag:
+            deviceId = favoriteArray[row] as String
+        case selectedTableViewTag:
+            deviceId = selectedSet[row] as! String
+        case borrowingTableViewTag:
+            deviceId = borrowingSet[row] as! String
+        default:
+            return nil
+        }
+        
+        var isFavorite = false
+        if contains(favoriteArray, deviceId) {
+            isFavorite = true
+        }
+        
+        let stringValue = self.tableView(tableView, objectValueForTableColumn: tableColumn, row: row) as! String
+        
+        cellView?.setCellData(deviceId, deviceString: stringValue, isFavorite: isFavorite)
+        
+        return cellView
+    }
     
     func deviceListTableViewClicked(tableView: NSTableView) {
         if !(tableView.clickedRow >= 0) {
@@ -279,6 +327,27 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         selectedSet.addObject(borrowingSet[clickedRow])
         
         selectedTableView.reloadData()
+    }
+    
+    func favoriteButtonPushed(deviceId: String, isFavorite: Bool) {
+
+        favoriteArray = favoriteArray.filter({ (deviceIdInArray) -> Bool in
+            return deviceIdInArray != deviceId as String
+        })
+        
+        if isFavorite {
+            favoriteArray.append(deviceId)
+        }
+        
+        let ud = NSUserDefaults.standardUserDefaults()
+        ud.setObject(favoriteArray, forKey: "favorite")
+        ud.synchronize()
+        
+        self.deviceListTableView.reloadData()
+        self.recentTableView.reloadData()
+        self.favoriteTableView.reloadData()
+        self.selectedTableView.reloadData()
+        self.borrowingTableView.reloadData()
     }
     
     @IBAction func bollowButtonAction(sender: AnyObject) {

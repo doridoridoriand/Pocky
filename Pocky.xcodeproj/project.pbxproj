@@ -16,6 +16,8 @@
 		C3F4EBE61B2C29BB00CADC6C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F4EBE51B2C29BB00CADC6C /* ViewController.swift */; };
 		C3F4EBE81B2C2ED100CADC6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F4EBE71B2C2ED100CADC6C /* AppDelegate.swift */; };
 		C3F4EC1A1B2C31D900CADC6C /* PockyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F4EC191B2C31D900CADC6C /* PockyTests.swift */; };
+		C3F694981B48845D000C6B55 /* DeviceTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F694971B48845D000C6B55 /* DeviceTableCell.swift */; };
+		C3F6949A1B4885C1000C6B55 /* DeviceTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3F694991B4885C1000C6B55 /* DeviceTableCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +58,8 @@
 		C3F4EBE51B2C29BB00CADC6C /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		C3F4EBE71B2C2ED100CADC6C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3F4EC191B2C31D900CADC6C /* PockyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PockyTests.swift; sourceTree = "<group>"; };
+		C3F694971B48845D000C6B55 /* DeviceTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTableCell.swift; sourceTree = "<group>"; };
+		C3F694991B4885C1000C6B55 /* DeviceTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DeviceTableCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,12 +105,14 @@
 			children = (
 				C3F4EBC71B29F50400CADC6C /* Images.xcassets */,
 				C3F4EBC91B29F50400CADC6C /* Main.storyboard */,
+				C3F694991B4885C1000C6B55 /* DeviceTableCell.xib */,
 				C3F4EBBD1B29F50400CADC6C /* Supporting Files */,
 				C3F4EBE71B2C2ED100CADC6C /* AppDelegate.swift */,
 				C3B81C971B2D87A900A4B986 /* CommonConst.swift */,
 				C3F4EBE51B2C29BB00CADC6C /* ViewController.swift */,
 				C3F4EBE01B29F5D000CADC6C /* Pocky-Bridging-Header.h */,
 				C3B0C3B51B3566820094E5A0 /* Device.swift */,
+				C3F694971B48845D000C6B55 /* DeviceTableCell.swift */,
 			);
 			path = Pocky;
 			sourceTree = "<group>";
@@ -217,6 +223,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3F6949A1B4885C1000C6B55 /* DeviceTableCell.xib in Resources */,
 				C3F4EBC81B29F50400CADC6C /* Images.xcassets in Resources */,
 				C3F4EBCB1B29F50400CADC6C /* Main.storyboard in Resources */,
 			);
@@ -240,6 +247,7 @@
 				C3F4EBE81B2C2ED100CADC6C /* AppDelegate.swift in Sources */,
 				C3F4EBE61B2C29BB00CADC6C /* ViewController.swift in Sources */,
 				C3B0C3B61B3566820094E5A0 /* Device.swift in Sources */,
+				C3F694981B48845D000C6B55 /* DeviceTableCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
