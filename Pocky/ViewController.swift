@@ -328,6 +328,11 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             saveBorrowingSet()
             
             borrowingTableView.reloadData()
+            
+            if currentMode == Mode.Return {
+                selectedSet.removeAllObjects()
+                selectedTableView.reloadData()
+            }
         }
     }
     
