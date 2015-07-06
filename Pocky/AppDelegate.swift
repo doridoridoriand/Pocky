@@ -12,9 +12,7 @@ import AppKit
 class AppDelegate: NSObject, NSApplicationDelegate  {
     
     func applicationDidFinishLaunching(notification: NSNotification) {
-//        NSEvent.addGlobalMonitorForEventsMatchingMask() { (event) -> Void in
-//            
-//        }
+        
     }
     
     func applicationWillTerminate(notification: NSNotification) {
@@ -31,7 +29,25 @@ class AppDelegate: NSObject, NSApplicationDelegate  {
             return true
         }
     }
+    
+    @IBAction func closeWindowMenuAction(sender: AnyObject) {
+        
+    }
+    
+    @IBAction func borrowMenuAction(sender: AnyObject) {
+        NSNotificationCenter.defaultCenter().postNotificationName(CommonConst.notificationMenuBorrow, object: nil)
+    }
+    
+    @IBAction func returnMenuAction(sender: AnyObject) {
+        NSNotificationCenter.defaultCenter().postNotificationName(CommonConst.notificationMenuReturn, object: nil)
+    }
+    
+    @IBAction func allReturnMenuAction(sender: AnyObject) {
+        NSNotificationCenter.defaultCenter().postNotificationName(CommonConst.notificationMenuAllReturn, object: nil)
+    }
+    
     @IBAction func resetMenuAction(sender: AnyObject) {
         NSNotificationCenter.defaultCenter().postNotificationName(CommonConst.notificationMenuReset, object: nil)
     }
+
 }

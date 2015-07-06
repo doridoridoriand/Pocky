@@ -54,12 +54,38 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="File" id="Aut-hm-hHN" userLabel="File">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="File" id="xDZ-zp-uQF">
+                                    <items>
+                                        <menuItem title="ウインドウを閉じる" keyEquivalent="w" id="4fK-xC-tZ4" userLabel="ウインドウを閉じる">
+                                            <connections>
+                                                <action selector="closeWindowMenuAction:" target="Voe-Tx-rLC" id="nWI-yE-lNN"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Edit" id="lzp-2o-jlm" userLabel="Edit">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Edit" id="lPc-4o-IMy">
                                     <items>
-                                        <menuItem title="Reset" id="Cx8-lM-yHf" userLabel="Reset">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="借用" keyEquivalent="b" id="cEU-yh-Sck">
+                                            <connections>
+                                                <action selector="borrowMenuAction:" target="Voe-Tx-rLC" id="Wce-LK-gMb"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="返却" keyEquivalent="y" id="3cj-XM-MFG">
+                                            <connections>
+                                                <action selector="returnMenuAction:" target="Voe-Tx-rLC" id="7h2-BU-rWj"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="全て返却" keyEquivalent="j" id="Ets-Ga-bT7">
+                                            <connections>
+                                                <action selector="allReturnMenuAction:" target="Voe-Tx-rLC" id="2CN-ys-tOk"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="リセット" keyEquivalent="l" id="Cx8-lM-yHf">
                                             <connections>
                                                 <action selector="resetMenuAction:" target="Voe-Tx-rLC" id="TfQ-9k-3xa"/>
                                             </connections>
@@ -110,7 +136,11 @@
                         <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
                     </connections>
                 </application>
-                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Pocky" customModuleProvider="target"/>
+                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Pocky" customModuleProvider="target">
+                    <connections>
+                        <outlet property="borrowMenuAction" destination="cEU-yh-Sck" id="xfA-1v-Aaf"/>
+                    </connections>
+                </customObject>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="75" y="0.0"/>

@@ -15,7 +15,20 @@ class CommonConst {
         return ""
     }
     
+    class var notificationMenuBorrow: String {
+        return "NotificationMenuBorrow"
+    }
+
+    class var notificationMenuReturn: String {
+        return "NotificationMenuReturn"
+    }
+
+    class var notificationMenuAllReturn: String {
+        return "NotificationMenuAllReturn"
+    }
+    
     class var notificationMenuReset: String {
         return "NotificationMenuReset"
     }
+
 }

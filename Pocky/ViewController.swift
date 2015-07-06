@@ -60,6 +60,9 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         selectedTableView.registerNib(nib, forIdentifier: deviceCellIdentifier)
         borrowingTableView.registerNib(nib, forIdentifier: deviceCellIdentifier)
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "menuBorrow:", name: CommonConst.notificationMenuBorrow, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "menuReturn:", name: CommonConst.notificationMenuReturn, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "menuAllReturn:", name: CommonConst.notificationMenuAllReturn, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "menuReset:", name: CommonConst.notificationMenuReset, object: nil)
         
         // 検索機能
@@ -154,6 +157,18 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         }
     }
     
+    func menuBorrow(notification: NSNotification?) {
+        borrowDevice()
+    }
+
+    func menuReturn(notification: NSNotification?) {
+        returnDevice()
+    }
+
+    func menuAllReturn(notification: NSNotification?) {
+        allReturnDevice()
+    }
+    
     func sortArray(inout array: [String]) {
         sort(&array) {
             (str1 : String, str2 : String) -> Bool in
@@ -214,6 +229,106 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             return false
         }
         return true
+    }
+    
+    func borrowDevice() {
+        if !checkNameTextFiledCount() {
+            return
+        }
+        
+        if currentMode == Mode.Borrow && selectedSet.count > 0 {
+            
+            var textString : String = ""
+            for selectedDeviceId in selectedSet {
+                let device = dataDic[selectedDeviceId as! String]
+                textString += String(format: "[借用]%@\n", device!.displayName)
+            }
+            
+            println(textString)
+            
+            requestSlack(textString)
+            
+            for deviceId in selectedSet {
+                borrowingSet.addObject(deviceId)
+            }
+            
+            for deviceId in selectedSet {
+                // 配列内の同じdeviceIdを削除
+                recentArray = recentArray.filter({ (deviceIdInArray) -> Bool in
+                    return deviceIdInArray != deviceId as! String
+                })
+                
+                recentArray.insert(deviceId as! String, atIndex: 0)
+                
+                if recentArray.count > recentMaxNumber {
+                    recentArray.removeLast()
+                }
+            }
+            
+            saveRecentSet()
+            saveBorrowingSet()
+            
+            selectedSet.removeAllObjects()
+            
+            recentTableView.reloadData()
+            selectedTableView.reloadData()
+            borrowingTableView.reloadData()
+        } else {
+            println("not selected")
+        }
+    }
+    
+    func returnDevice() {
+        if !checkNameTextFiledCount() {
+            return
+        }
+        
+        if currentMode == Mode.Return && selectedSet.count > 0 {
+            var textString : String = ""
+            for selectedDeviceId in selectedSet {
+                let device = dataDic[selectedDeviceId as! String]
+                textString += String(format: "[返却]%@\n", device!.displayName)
+            }
+            
+            println(textString)
+            
+            requestSlack(textString)
+            
+            for device in selectedSet {
+                borrowingSet.removeObject(device)
+            }
+            
+            saveBorrowingSet()
+            
+            selectedSet.removeAllObjects()
+            
+            borrowingTableView.reloadData()
+            selectedTableView.reloadData()
+        }
+    }
+    
+    func allReturnDevice() {
+        if !checkNameTextFiledCount() {
+            return
+        }
+        
+        if borrowingSet.count > 0 {
+            var textString : String = ""
+            for borrowingDeviceId in borrowingSet {
+                let device = dataDic[borrowingDeviceId as! String]
+                textString += String(format: "[返却]%@\n", device!.displayName)
+            }
+            
+            println(textString)
+            
+            requestSlack(textString)
+            
+            borrowingSet.removeAllObjects()
+            
+            saveBorrowingSet()
+            
+            borrowingTableView.reloadData()
+        }
     }
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
@@ -381,104 +496,15 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     }
     
     @IBAction func bollowButtonAction(sender: AnyObject) {
-        if !checkNameTextFiledCount() {
-            return
-        }
-        
-        if currentMode == Mode.Borrow && selectedSet.count > 0 {
-            
-            var textString : String = ""
-            for selectedDeviceId in selectedSet {
-                let device = dataDic[selectedDeviceId as! String]
-                textString += String(format: "[借用]%@\n", device!.displayName)
-            }
-            
-            println(textString)
-            
-            requestSlack(textString)
-            
-            for deviceId in selectedSet {
-                borrowingSet.addObject(deviceId)
-            }
-            
-            for deviceId in selectedSet {
-                // 配列内の同じdeviceIdを削除
-                recentArray = recentArray.filter({ (deviceIdInArray) -> Bool in
-                    return deviceIdInArray != deviceId as! String
-                })
-                
-                recentArray.insert(deviceId as! String, atIndex: 0)
-                
-                if recentArray.count > recentMaxNumber {
-                    recentArray.removeLast()
-                }
-            }
-            
-            saveRecentSet()
-            saveBorrowingSet()
-            
-            selectedSet.removeAllObjects()
-
-            recentTableView.reloadData()
-            selectedTableView.reloadData()
-            borrowingTableView.reloadData()
-        } else {
-            println("not selected")
-        }
-        
+        borrowDevice()
     }
     
     @IBAction func returnButtonAction(sender: AnyObject) {
-        if !checkNameTextFiledCount() {
-            return
-        }
-        
-        if currentMode == Mode.Return && selectedSet.count > 0 {
-            var textString : String = ""
-            for selectedDeviceId in selectedSet {
-                let device = dataDic[selectedDeviceId as! String]
-                textString += String(format: "[返却]%@\n", device!.displayName)
-            }
-            
-            println(textString)
-            
-            requestSlack(textString)
-
-            for device in selectedSet {
-                borrowingSet.removeObject(device)
-            }
-            
-            saveBorrowingSet()
-
-            selectedSet.removeAllObjects()
-
-            borrowingTableView.reloadData()
-            selectedTableView.reloadData()
-        }
+        returnDevice()
     }
     
     @IBAction func allReturnButtonAction(sender: AnyObject) {
-        if !checkNameTextFiledCount() {
-            return
-        }
-        
-        if borrowingSet.count > 0 {
-            var textString : String = ""
-            for borrowingDeviceId in borrowingSet {
-                let device = dataDic[borrowingDeviceId as! String]
-                textString += String(format: "[返却]%@\n", device!.displayName)
-            }
-            
-            println(textString)
-            
-            requestSlack(textString)
-            
-            borrowingSet.removeAllObjects()
-            
-            saveBorrowingSet()
-            
-            borrowingTableView.reloadData()
-        }
+        allReturnDevice()
     }
     
 }
