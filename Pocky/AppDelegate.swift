@@ -12,7 +12,19 @@ import AppKit
 class AppDelegate: NSObject, NSApplicationDelegate  {
     
     func applicationDidFinishLaunching(notification: NSNotification) {
-        
+        var EditMenu = NSApplication.sharedApplication().mainMenu!.itemWithTitle("Edit")
+        if (EditMenu != nil) {
+            var Count: Int = EditMenu!.submenu!.numberOfItems
+            if (EditMenu!.submenu!.itemAtIndex(Count - 1)!.title == "Emoji & Symbols") {
+                EditMenu!.submenu!.removeItemAtIndex(Count - 1)
+            }
+            if (EditMenu!.submenu!.itemAtIndex(Count - 2)!.title == "Start Dictation…") {
+                EditMenu!.submenu!.removeItemAtIndex(Count - 2)
+            }
+            if (EditMenu!.submenu!.itemAtIndex(Count - 3)!.title == "") {
+                EditMenu!.submenu!.removeItemAtIndex(Count - 3)
+            }
+        }
     }
     
     func applicationWillTerminate(notification: NSNotification) {
@@ -31,7 +43,7 @@ class AppDelegate: NSObject, NSApplicationDelegate  {
     }
     
     @IBAction func closeWindowMenuAction(sender: AnyObject) {
-        
+        NSApp.windows[0].close()
     }
     
     @IBAction func borrowMenuAction(sender: AnyObject) {
