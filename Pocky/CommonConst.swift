@@ -14,4 +14,8 @@ class CommonConst {
     class var requestURLSlackWebhook: String {
         return ""
     }
+    
+    class var notificationMenuReset: String {
+        return "NotificationMenuReset"
+    }
 }

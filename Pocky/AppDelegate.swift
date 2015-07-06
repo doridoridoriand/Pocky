@@ -12,7 +12,9 @@ import AppKit
 class AppDelegate: NSObject, NSApplicationDelegate  {
     
     func applicationDidFinishLaunching(notification: NSNotification) {
-        
+//        NSEvent.addGlobalMonitorForEventsMatchingMask() { (event) -> Void in
+//            
+//        }
     }
     
     func applicationWillTerminate(notification: NSNotification) {
@@ -28,5 +30,8 @@ class AppDelegate: NSObject, NSApplicationDelegate  {
             }
             return true
         }
+    }
+    @IBAction func resetMenuAction(sender: AnyObject) {
+        NSNotificationCenter.defaultCenter().postNotificationName(CommonConst.notificationMenuReset, object: nil)
     }
 }

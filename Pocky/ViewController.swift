@@ -20,7 +20,7 @@ let recentMaxNumber : Int = 50
 
 let deviceCellIdentifier = "DeviceTableCell"
 
-class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate, DeviceTableCellDelegate {
+class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate, NSAlertDelegate, DeviceTableCellDelegate {
 
     enum Mode {
         case Borrow, Return
@@ -59,6 +59,8 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         favoriteTableView.registerNib(nib, forIdentifier: deviceCellIdentifier)
         selectedTableView.registerNib(nib, forIdentifier: deviceCellIdentifier)
         borrowingTableView.registerNib(nib, forIdentifier: deviceCellIdentifier)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "menuReset:", name: CommonConst.notificationMenuReset, object: nil)
         
         // 検索機能
         NSNotificationCenter.defaultCenter().addObserverForName(NSControlTextDidChangeNotification, object: deviceListSearchField, queue:NSOperationQueue.mainQueue()) { (notification: NSNotification!) -> Void in
@@ -137,6 +139,21 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         
     }
     
+    func menuReset(notification: NSNotification?) {
+        let alert = NSAlert()
+        alert.messageText = "借用中の端末をリセットしますか？"
+        alert.addButtonWithTitle("Reset")
+        alert.addButtonWithTitle("Cancel")
+        let responseTag = alert.runModal()
+        switch responseTag {
+        case NSAlertFirstButtonReturn:
+            borrowingSet.removeAllObjects()
+            borrowingTableView.reloadData()
+        default:
+            break
+        }
+    }
+    
     func sortArray(inout array: [String]) {
         sort(&array) {
             (str1 : String, str2 : String) -> Bool in
@@ -186,6 +203,17 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         let ud = NSUserDefaults.standardUserDefaults()
         ud.setObject(nameTextField.stringValue, forKey: "name")
         ud.synchronize()
+    }
+    
+    func checkNameTextFiledCount() -> Bool {
+        if !(count(nameTextField.stringValue) > 0) {
+            let alert = NSAlert()
+            alert.messageText = "Nameを入力してください。"
+            alert.addButtonWithTitle("OK")
+            alert.runModal()
+            return false
+        }
+        return true
     }
     
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
@@ -353,6 +381,10 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     }
     
     @IBAction func bollowButtonAction(sender: AnyObject) {
+        if !checkNameTextFiledCount() {
+            return
+        }
+        
         if currentMode == Mode.Borrow && selectedSet.count > 0 {
             
             var textString : String = ""
@@ -397,6 +429,10 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     }
     
     @IBAction func returnButtonAction(sender: AnyObject) {
+        if !checkNameTextFiledCount() {
+            return
+        }
+        
         if currentMode == Mode.Return && selectedSet.count > 0 {
             var textString : String = ""
             for selectedDeviceId in selectedSet {
@@ -422,6 +458,10 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     }
     
     @IBAction func allReturnButtonAction(sender: AnyObject) {
+        if !checkNameTextFiledCount() {
+            return
+        }
+        
         if borrowingSet.count > 0 {
             var textString : String = ""
             for borrowingDeviceId in borrowingSet {
